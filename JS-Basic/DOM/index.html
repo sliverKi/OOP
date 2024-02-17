@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DOM Interaction</title>
+  <script src="app.js" defer></script>
+  <style>
+    .red-bg{
+      background-color: red;
+      color: white;
+    }
+    .visible {
+      display: block;
+    }
+    .invisible{
+      display: none
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id ="Dive">Dive into the DOM!</h1>
+    <h2>test h2</h2>
+  </header>
+  <section class="red-bg visible">
+    <ul>
+      <li>test1</li>
+      <li class="list-item">test2</li>
+      <li class="list-item">test3</li>
+    </ul>
+  </section>
+  
+  <button>change className</button>
+  <div>
+    <input type="text" value = "default-text">
+  </div>
+  <!-- 
+  window : 브라우저에서 보이는 최상위 전역 객체
+  document : HTML과 상호작용하는 문서 객체
+  -->
+</body>
+</html>
