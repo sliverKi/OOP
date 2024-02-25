@@ -138,8 +138,8 @@ class ProductList extends Component{
         const prodList = this.createRootElement('ul', 'product-list', [new ElementAttribute('id','prod-list')]);
         //상속으로 인해 더이상 필요 없음 : prodList.id = 'prod-list';
         for (const prod of this.products) {
-            const productItem = new ProductItem(prod, 'prod-list');
-            productItem.render();
+            new ProductItem(prod, 'prod-list');
+            //productItem.render();
             
         }
         
