@@ -23,10 +23,13 @@ class ElementAttribute {
     }
 }
 class Component {
-    constructor(renederHookId) {
-        console.log('Called');
+    constructor(renederHookId, isRender=true) {
+        
         this.hookId = renederHookId;
-        this.render(); //부모 클래스에서 render()를 호출하도록 하여 해당 부모클래스를 상속받는 자식 클래스에서 활용가능하게 함. ~> 따라서 자식 클래스는 더이상 render()를 수동으로 호출하지 않아도 됌
+        //this.render(); //부모 클래스에서 render()를 호출하도록 하여 해당 부모클래스를 상속받는 자식 클래스에서 활용가능하게 함. ~> 따라서 자식 클래스는 더이상 render()를 수동으로 호출하지 않아도 됌
+        if(isRender){ //초기 콘텐츠가 렌더링 후에 data가 도착하는 오류를 방지하기 위해 조건문으로 변경하고 isRender추가 
+            this.render()
+        }
     }
 
     render() {} //부모에는 없지만 자식클래스에서 활용하기 위함.
@@ -91,7 +94,7 @@ class ProductItem extends Component {
     // 단일 상품 rednering 담당 class
     constructor(product, renederHookId) {
         //console.log("Called///")
-        super(renederHookId);
+        super(renederHookId, false);
         this.product = product;
     }
     addToCart() {
