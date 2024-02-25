@@ -96,6 +96,7 @@ class ProductItem extends Component {
         //console.log("Called///")
         super(renederHookId, false);
         this.product = product;
+        this.render();
     }
     addToCart() {
         App.addProductToCart(this.product);
