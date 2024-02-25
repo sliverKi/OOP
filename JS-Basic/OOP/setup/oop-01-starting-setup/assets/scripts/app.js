@@ -148,16 +148,11 @@ class ProductList extends Component{
 
 class Shop {
     render() {
-        //const renederHook = document.getElementById('app');
-        //상속 전 코드 : this.cart = new ShoppingCart();
         this.cart = new ShoppingCart('app');//상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달 
-        this.cart.render();
-        //상속 전 코드 : const cartEl = this.cart.render();
-        const productList = new ProductList('app');
-        productList.render();
-        //상속으로 더이상 필요 없음 : const prodListEl = productList.render();
-        //상속 전 코드 : renederHook.append(cartEl);
-        //상속 전 코드 : renederHook.append(prodListEl);
+        //this.cart.render();//render()에 대해서 method-overriding 할거임 왜냐면 수동으로 호출하는게 아니라 자동으로 생성 과정에 호출되길 원함.
+        new ProductList('app');
+        //productList.render();
+       
     }
 }
 
@@ -166,7 +161,7 @@ class App {
 
     static init() {
         const shop = new Shop();
-        shop.render();
+        //shop.render(); 수동으로 호출하는게 아니라 자동으로 생성 과정에 호출되길 원함.
         this.cart = shop.cart;
     }
     static addProductToCart(product) {
