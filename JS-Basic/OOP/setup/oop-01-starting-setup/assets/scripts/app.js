@@ -90,7 +90,8 @@ class ShoppingCart extends Component {
         //상속 전 코드 :cartEl.className = 'cart';
         this.totalOutPut = cartEl.querySelector('h2');
         const orderBtn = cartEl.querySelector('button')
-        orderBtn.addEventListener('click', this.orderProducts.bind(this))
+        //orderBtn.addEventListener('click', this.orderProducts.bind(this))
+        orderBtn.addEventListener('click', () => this.orderProducts())
         return cartEl;
     }
 }
