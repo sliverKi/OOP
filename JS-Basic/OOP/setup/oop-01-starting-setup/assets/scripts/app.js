@@ -73,9 +73,10 @@ class ShoppingCart extends Component {
     }
 
     constructor(renederHookId) {
-        super(renederHookId); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함
+        super(renederHookId, false); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함
+        
     }
-    orderProducts() { 
+    orderProducts = () => { //생성자가 실행된 후에 속성으로 변경됨. 즉, super 이후에 실행 시켜야함. super(false) 전달.
         console.log("order");
         console.log(this.items)
     }
@@ -90,8 +91,10 @@ class ShoppingCart extends Component {
         //상속 전 코드 :cartEl.className = 'cart';
         this.totalOutPut = cartEl.querySelector('h2');
         const orderBtn = cartEl.querySelector('button')
-        //orderBtn.addEventListener('click', this.orderProducts.bind(this))
-        orderBtn.addEventListener('click', () => this.orderProducts())
+        //방법1: orderBtn.addEventListener('click', this.orderProducts.bind(this))
+        //방법2: orderBtn.addEventListener('click', () => this.orderProducts())
+        //방법3: items 배열 필드 이용 ~> 주의 :: render()는 
+        orderBtn.addEventListener('click', this.orderProducts)
         return cartEl;
     }
 }
