@@ -16,41 +16,44 @@ class Product {
     }
 }
 
-class ElementAttribute { 
-    constructor(attrName, attrValue) { 
-        this.name = attrName
-        this.value = attrValue
+class ElementAttribute {
+    constructor(attrName, attrValue) {
+        this.name = attrName;
+        this.value = attrValue;
     }
 }
-class Component { 
+class Component {
     constructor(renederHookId) {
-        console.log("Called")
-        this.hookId = renederHookId
-        this.render(); //부모 클래스에서 render()를 호출하도록 하여 해당 부모클래스를 상속받는 자식 클래스에서 활용가능하게 함. ~> 따라서 자식 클래스는 더이상 render()를 수동으로 호출하지 않아도 됌 
+        console.log('Called');
+        this.hookId = renederHookId;
+        this.render(); //부모 클래스에서 render()를 호출하도록 하여 해당 부모클래스를 상속받는 자식 클래스에서 활용가능하게 함. ~> 따라서 자식 클래스는 더이상 render()를 수동으로 호출하지 않아도 됌
     }
 
-    render() { } //부모에는 없지만 자식클래스에서 활용하기 위함.
-    createRootElement(tag, cssClasses, attributes) { 
+    render() {} //부모에는 없지만 자식클래스에서 활용하기 위함.
+    createRootElement(tag, cssClasses, attributes) {
         const rootElement = document.createElement(tag);
-        if (cssClasses) { 
+        if (cssClasses) {
             rootElement.className = cssClasses;
         }
-        if (attributes && attributes.length > 0) { 
+        if (attributes && attributes.length > 0) {
             for (const attr of attributes) {
                 rootElement.setAttribute(attr.name, attr.value);
             }
         }
-        document.getElementById(this.hookId).append(rootElement)
-        return rootElement
+        document.getElementById(this.hookId).append(rootElement);
+        return rootElement;
     }
 }
-class ShoppingCart extends Component{
+class ShoppingCart extends Component {
     items = [];
-    set cartItems(value) {//value = cartItems의 배열=> 즉, 기존의 items 배열을 cartItmes배열로 덮어씀
+    set cartItems(value) {
+        //value = cartItems의 배열=> 즉, 기존의 items 배열을 cartItmes배열로 덮어씀
         this.items = value;
-        this.totalOutPut.innerHTML = `<h2>Total: \$${this.totalAmount.toFixed(2)}</h2>`; // 새로운 cartItmes를 설정할때 마다, 
-                                                                              // totalAmount를 계산하고 HTML code를 업데이트 함. +)toFixed:부동 소수점
-     }
+        this.totalOutPut.innerHTML = `<h2>Total: \$${this.totalAmount.toFixed(
+            2,
+        )}</h2>`; // 새로운 cartItmes를 설정할때 마다,
+        // totalAmount를 계산하고 HTML code를 업데이트 함. +)toFixed:부동 소수점
+    }
     get totalAmount() {
         const sum = this.items.reduce(
             (prevValue, curItem) => prevValue + curItem.price,
@@ -61,18 +64,19 @@ class ShoppingCart extends Component{
 
     addProduct(product) {
         //this.items.push(product);
-        const updatedItems = [...this.items]//본 배열인 items의 사본 배열을 만들고
-        updatedItems.push(product)//사본 배열에 상품을 추가한다음
-        this.cartItems = updatedItems//setter에 트리거 할 수 있도록 전달하여 setter에서는 가격을 계산하여 출력을 업데이트 한다.
+        const updatedItems = [...this.items]; //본 배열인 items의 사본 배열을 만들고
+        updatedItems.push(product); //사본 배열에 상품을 추가한다음
+        this.cartItems = updatedItems; //setter에 트리거 할 수 있도록 전달하여 setter에서는 가격을 계산하여 출력을 업데이트 한다.
     }
 
-    constructor(renederHookId) { 
-        super(renederHookId); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함 
+    constructor(renederHookId) {
+        super(renederHookId); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함
     }
-    
-    render() {//:Method-Overriding
-        //상속 전 코드 : const cartEl = document.createElement('section');//상속 구현~> extends 키워드 추가 
-        const cartEl = this.createRootElement('section', 'cart')//상속 후 코드 :
+
+    render() {
+        //:Method-Overriding
+        //상속 전 코드 : const cartEl = document.createElement('section');//상속 구현~> extends 키워드 추가
+        const cartEl = this.createRootElement('section', 'cart'); //상속 후 코드 :
         cartEl.innerHTML = `
             <h2>Total: \$${0}</h2>
             <button>Order Now!</button>
@@ -83,7 +87,7 @@ class ShoppingCart extends Component{
     }
 }
 
-class ProductItem extends Component{
+class ProductItem extends Component {
     // 단일 상품 rednering 담당 class
     constructor(product, renederHookId) {
         //console.log("Called///")
@@ -93,10 +97,11 @@ class ProductItem extends Component{
     addToCart() {
         App.addProductToCart(this.product);
     }
-    render() {//:Method-Overriding
+    render() {
+        //:Method-Overriding
         //상속 전 코드 : const prodEl = document.createElement('li');
         //상속 전 코드 :  prodEl.className = 'product-item';
-        const prodEl = this.createRootElement('li', 'product-item')//상속 구현
+        const prodEl = this.createRootElement('li', 'product-item'); //상속 구현
         prodEl.innerHTML = `
             <div>
                 <img src="${this.product.imageUrl}", alt="${this.product.title}">
@@ -113,58 +118,60 @@ class ProductItem extends Component{
         //return prodEl; -> 상속으로 인해 더이상 필요하지 않게 됨
     }
 }
-class ProductList extends Component{
-    products = [
-        new Product(
-            'Apple',
-            'https://www.outdoornews.co.kr/news/photo/202009/32077_90504_551.jpg',
-            'envy Apple',
-            80.99,
-        ),
-        new Product(
-            'Mango',
-            'https://i.namu.wiki/i/IQFw-3D_TnH6a1CjO-gOGPkHYBn6YhyazdQkFzUIhJp1yGRoJf-rtpxZL-4O944EZElq5VCFRtGJVH2RS_JPNQ.webp',
-            'envy Mango',
-            90.99,
-        ),
-    ];
-
-    constructor(renederHookId) { 
-        super(renederHookId)
-        this.products = [...products];//ERROR: Uncaught TypeError: this.products is not iterable
+class ProductList extends Component {
+    products 
+    constructor(renederHookId) {
+        super(renederHookId);
+        this.fetchProducts();
+        //this.products = [...products];//ERROR: Uncaught TypeError: this.products is not iterable
+    }
+    fetchProducts() {
+        this.products = [
+            new Product(
+                'Apple',
+                'https://www.outdoornews.co.kr/news/photo/202009/32077_90504_551.jpg',
+                'envy Apple',
+                80.99,
+            ),
+            new Product(
+                'Mango',
+                'https://i.namu.wiki/i/IQFw-3D_TnH6a1CjO-gOGPkHYBn6YhyazdQkFzUIhJp1yGRoJf-rtpxZL-4O944EZElq5VCFRtGJVH2RS_JPNQ.webp',
+                'envy Mango',
+                90.99,
+            ),
+        ];    
+        this.rednerProducts();
     }
 
-    render() {//:Method-Overriding
-        // 모든 상품 rednering 담당 class
-        //const renederHook = document.getElementById('app')
-        // const prodList = document.createElement('ul');//상속 구현 
-        // prodList.className = 'product-list';
-        const prodList = this.createRootElement('ul', 'product-list', [new ElementAttribute('id','prod-list')]);
-        //상속으로 인해 더이상 필요 없음 : prodList.id = 'prod-list';
-        
-        
-        for (const prod of this.products) {//ERROR :: this.products is not iterable. ~> 부모 클래스 생성자에 의해 호출되는 메서드인 render(), 생성자에서 render()를 호출했는데, 아직 만들어 지지 않은 data를 의존하고 있음, 그럼 어디서 수정을 해야 하는가? 바로  'ProductList의 constructor()에서 고쳐야함.'
+    rednerProducts() {
+        //초기 컨텐츠와 리스트를 렌더링
+        for (const prod of this.products) {
             new ProductItem(prod, 'prod-list');
-            //productItem.render();
-            
         }
-        
+    }
+    render() {
+        //:Method-Overriding
+
+        const prodList = this.createRootElement('ul', 'product-list', [
+            new ElementAttribute('id', 'prod-list'),
+        ]);
+        if (this.products && this.products.length > 0) {
+            this.rednerProducts();
+        }
     }
 }
 
-class Shop extends Component{
-
-    constructor() { 
+class Shop extends Component {
+    constructor() {
         //console.log("Called this",this)//this == Shop{}
         //this.render()
-        super()
+        super();
     }
     render() {
-        this.cart = new ShoppingCart('app');//상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달 
+        this.cart = new ShoppingCart('app'); //상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달
         //this.cart.render();//render()에 대해서 method-overriding 할거임 왜냐면 수동으로 호출하는게 아니라 자동으로 생성 과정에 호출되길 원함.
         new ProductList('app');
         //productList.render();
-       
     }
 }
 
