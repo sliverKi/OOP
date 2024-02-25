@@ -74,7 +74,7 @@ class ShoppingCart extends Component {
 
     constructor(renederHookId) {
         super(renederHookId, false); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함
-        
+        this.render();
     }
     orderProducts = () => { //생성자가 실행된 후에 속성으로 변경됨. 즉, super 이후에 실행 시켜야함. super(false) 전달.
         console.log("order");
