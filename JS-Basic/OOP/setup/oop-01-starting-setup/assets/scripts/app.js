@@ -132,14 +132,15 @@ class ProductItem extends Component {
     }
 }
 class ProductList extends Component {
-    products 
+    #products = [];
     constructor(renederHookId) {
         super(renederHookId);
+        
         this.fetchProducts();
         //this.products = [...products];//ERROR: Uncaught TypeError: this.products is not iterable
     }
     fetchProducts() {
-        this.products = [
+        this.#products = [
             new Product(
                 'Apple',
                 'https://www.outdoornews.co.kr/news/photo/202009/32077_90504_551.jpg',
@@ -158,7 +159,7 @@ class ProductList extends Component {
 
     rednerProducts() {
         //초기 컨텐츠와 리스트를 렌더링
-        for (const prod of this.products) {
+        for (const prod of this.#products) {
             new ProductItem(prod, 'prod-list');
         }
     }
@@ -168,7 +169,7 @@ class ProductList extends Component {
         const prodList = this.createRootElement('ul', 'product-list', [
             new ElementAttribute('id', 'prod-list'),
         ]);
-        if (this.products && this.products.length > 0) {
+        if (this.#products && this.#products.length > 0) {
             this.rednerProducts();
         }
     }
@@ -183,8 +184,8 @@ class Shop extends Component {
     render() {
         this.cart = new ShoppingCart('app'); //상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달
         //this.cart.render();//render()에 대해서 method-overriding 할거임 왜냐면 수동으로 호출하는게 아니라 자동으로 생성 과정에 호출되길 원함.
-        new ProductList('app');
-        //productList.render();
+        const list= new ProductList('app');
+        console.log(list.#products)
     }
 }
 
