@@ -80,17 +80,20 @@ class ShoppingCart extends Component{
     }
 }
 
-class ProductItem {
+class ProductItem extends Component{
     // 단일 상품 rednering 담당 class
-    constructor(product) {
+    constructor(product, renederHookId) {
+        //console.log("Called///")
+        super(renederHookId);
         this.product = product;
     }
     addToCart() {
         App.addProductToCart(this.product);
     }
     render() {
-        const prodEl = document.createElement('li');//상속 구현
-        prodEl.className = 'product-item';
+        //상속 전 코드 : const prodEl = document.createElement('li');
+        //상속 전 코드 :  prodEl.className = 'product-item';
+        const prodEl = this.createRootElement('li', 'product-item')//상속 구현
         prodEl.innerHTML = `
             <div>
                 <img src="${this.product.imageUrl}", alt="${this.product.title}">
@@ -104,10 +107,10 @@ class ProductItem {
         `;
         const addCartButton = prodEl.querySelector('button'); //1. queryselector로 요소 접근
         addCartButton.addEventListener('click', this.addToCart.bind(this)); //2. 접근하였다면, 클릭 이벤트 등록
-        return prodEl;
+        //return prodEl; -> 상속으로 인해 더이상 필요하지 않게 됨
     }
 }
-class ProductList {
+class ProductList extends Component{
     products = [
         new Product(
             'Apple',
@@ -122,36 +125,39 @@ class ProductList {
             90.99,
         ),
     ];
+
+    constructor(renederHookId) { 
+        console.log("h")
+        super(renederHookId)
+    }
     render() {
         // 모든 상품 rednering 담당 class
         //const renederHook = document.getElementById('app')
-        const prodList = document.createElement('ul');//상속 구현 
-        prodList.className = 'product-list';
+        // const prodList = document.createElement('ul');//상속 구현 
+        // prodList.className = 'product-list';
+        const prodList = this.createRootElement('ul', 'product-list', [new ElementAttribute('id','prod-list')]);
+        //상속으로 인해 더이상 필요 없음 : prodList.id = 'prod-list';
         for (const prod of this.products) {
-            const productItem = new ProductItem(prod);
-            const prodEl = productItem.render();
-            console.log('productList in render', prodEl);
-            prodList.append(prodEl);
+            const productItem = new ProductItem(prod, 'prod-list');
+            productItem.render();
+            
         }
-        //renederHook.append(prodList)
-        return prodList;
+        
     }
 }
 
 class Shop {
     render() {
-        const renederHook = document.getElementById('app');
+        //const renederHook = document.getElementById('app');
         //상속 전 코드 : this.cart = new ShoppingCart();
         this.cart = new ShoppingCart('app');//상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달 
-
-        //상속 전 코드 : const cartEl = this.cart.render();
         this.cart.render();
-        
-        const productList = new ProductList();
-        const prodListEl = productList.render();
-
+        //상속 전 코드 : const cartEl = this.cart.render();
+        const productList = new ProductList('app');
+        productList.render();
+        //상속으로 더이상 필요 없음 : const prodListEl = productList.render();
         //상속 전 코드 : renederHook.append(cartEl);
-        renederHook.append(prodListEl);
+        //상속 전 코드 : renederHook.append(prodListEl);
     }
 }
 
