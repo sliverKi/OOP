@@ -136,10 +136,10 @@ class ProductList extends Component {
     constructor(renederHookId) {
         super(renederHookId, false);
         this.render();
-        this.fetchProducts();
+        this.#fetchProducts();
         //this.products = [...products];//ERROR: Uncaught TypeError: this.products is not iterable
     }
-    fetchProducts() {
+    #fetchProducts() {
         this.#products = [
             new Product(
                 'Apple',
