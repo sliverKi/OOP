@@ -26,7 +26,10 @@ class Component {
     constructor(renederHookId) {
         console.log("Called")
         this.hookId = renederHookId
+        this.render(); //부모 클래스에서 render()를 호출하도록 하여 해당 부모클래스를 상속받는 자식 클래스에서 활용가능하게 함. ~> 따라서 자식 클래스는 더이상 render()를 수동으로 호출하지 않아도 됌 
     }
+
+    render() { } //부모에는 없지만 자식클래스에서 활용하기 위함.
     createRootElement(tag, cssClasses, attributes) { 
         const rootElement = document.createElement(tag);
         if (cssClasses) { 
@@ -67,7 +70,7 @@ class ShoppingCart extends Component{
         super(renederHookId); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함 
     }
     
-    render() {
+    render() {//:Method-Overriding
         //상속 전 코드 : const cartEl = document.createElement('section');//상속 구현~> extends 키워드 추가 
         const cartEl = this.createRootElement('section', 'cart')//상속 후 코드 :
         cartEl.innerHTML = `
@@ -90,7 +93,7 @@ class ProductItem extends Component{
     addToCart() {
         App.addProductToCart(this.product);
     }
-    render() {
+    render() {//:Method-Overriding
         //상속 전 코드 : const prodEl = document.createElement('li');
         //상속 전 코드 :  prodEl.className = 'product-item';
         const prodEl = this.createRootElement('li', 'product-item')//상속 구현
@@ -127,17 +130,20 @@ class ProductList extends Component{
     ];
 
     constructor(renederHookId) { 
-        console.log("h")
         super(renederHookId)
+        this.products = [...products];//ERROR: Uncaught TypeError: this.products is not iterable
     }
-    render() {
+
+    render() {//:Method-Overriding
         // 모든 상품 rednering 담당 class
         //const renederHook = document.getElementById('app')
         // const prodList = document.createElement('ul');//상속 구현 
         // prodList.className = 'product-list';
         const prodList = this.createRootElement('ul', 'product-list', [new ElementAttribute('id','prod-list')]);
         //상속으로 인해 더이상 필요 없음 : prodList.id = 'prod-list';
-        for (const prod of this.products) {
+        
+        
+        for (const prod of this.products) {//ERROR :: this.products is not iterable. ~> 부모 클래스 생성자에 의해 호출되는 메서드인 render(), 생성자에서 render()를 호출했는데, 아직 만들어 지지 않은 data를 의존하고 있음, 그럼 어디서 수정을 해야 하는가? 바로  'ProductList의 constructor()에서 고쳐야함.'
             new ProductItem(prod, 'prod-list');
             //productItem.render();
             
@@ -146,7 +152,13 @@ class ProductList extends Component{
     }
 }
 
-class Shop {
+class Shop extends Component{
+
+    constructor() { 
+        //console.log("Called this",this)//this == Shop{}
+        //this.render()
+        super()
+    }
     render() {
         this.cart = new ShoppingCart('app');//상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달 
         //this.cart.render();//render()에 대해서 method-overriding 할거임 왜냐면 수동으로 호출하는게 아니라 자동으로 생성 과정에 호출되길 원함.
