@@ -134,8 +134,8 @@ class ProductItem extends Component {
 class ProductList extends Component {
     #products = [];
     constructor(renederHookId) {
-        super(renederHookId);
-        
+        super(renederHookId, false);
+        this.render();
         this.fetchProducts();
         //this.products = [...products];//ERROR: Uncaught TypeError: this.products is not iterable
     }
@@ -184,8 +184,8 @@ class Shop extends Component {
     render() {
         this.cart = new ShoppingCart('app'); //상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달
         //this.cart.render();//render()에 대해서 method-overriding 할거임 왜냐면 수동으로 호출하는게 아니라 자동으로 생성 과정에 호출되길 원함.
-        const list= new ProductList('app');
-        console.log(list.#products)
+        new ProductList('app');
+        
     }
 }
 
