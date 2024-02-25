@@ -1,123 +1,172 @@
 class Product {
-    //class 맨 첫글자는 반드시 대문자로 할것
-    //field
-    title = 'DEFAULT';
-    imageUrl;
-    price;
-    description;
-    //method
-    constructor(title, img, price, desc) {
+    //객체 틀 담당 class
+    // class를 기반으로 객체를 생성할 경우,
+    // 모든 필드가 그 객체의 속성으로 변하게 된다.
+    // title="class";
+    // imageUrl;
+    // price;
+    // description;
+
+    constructor(title, image, desc, price) {
+        //생성자 함수
         this.title = title;
-        this.imageUrl = img;
-        this.price = price;
+        this.imageUrl = image;
         this.description = desc;
+        this.price = price;
     }
 }
-class ShoppingCart {
+
+class ElementAttribute { 
+    constructor(attrName, attrValue) { 
+        this.name = attrName
+        this.value = attrValue
+    }
+}
+class Component { 
+    constructor(renederHookId) {
+        console.log("Called")
+        this.hookId = renederHookId
+    }
+    createRootElement(tag, cssClasses, attributes) { 
+        const rootElement = document.createElement(tag);
+        if (cssClasses) { 
+            rootElement.className = cssClasses;
+        }
+        if (attributes && attributes.length > 0) { 
+            for (const attr of attributes) {
+                rootElement.setAttribute(attr.name, attr.value);
+            }
+        }
+        document.getElementById(this.hookId).append(rootElement)
+        return rootElement
+    }
+}
+class ShoppingCart extends Component{
     items = [];
+    set cartItems(value) {//value = cartItems의 배열=> 즉, 기존의 items 배열을 cartItmes배열로 덮어씀
+        this.items = value;
+        this.totalOutPut.innerHTML = `<h2>Total: \$${this.totalAmount.toFixed(2)}</h2>`; // 새로운 cartItmes를 설정할때 마다, 
+                                                                              // totalAmount를 계산하고 HTML code를 업데이트 함. +)toFixed:부동 소수점
+     }
+    get totalAmount() {
+        const sum = this.items.reduce(
+            (prevValue, curItem) => prevValue + curItem.price,
+            0,
+        );
+        return sum;
+    }
 
     addProduct(product) {
-        this.items.push(product);
-        this.totalOutput.innerHTML = `<h2>Total : \$${1}</h2>`;
+        //this.items.push(product);
+        const updatedItems = [...this.items]//본 배열인 items의 사본 배열을 만들고
+        updatedItems.push(product)//사본 배열에 상품을 추가한다음
+        this.cartItems = updatedItems//setter에 트리거 할 수 있도록 전달하여 setter에서는 가격을 계산하여 출력을 업데이트 한다.
     }
+
+    constructor(renederHookId) { 
+        super(renederHookId); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함 
+    }
+    
     render() {
-        const cartEl = document.createElement('section');
+        //상속 전 코드 : const cartEl = document.createElement('section');//상속 구현~> extends 키워드 추가 
+        const cartEl = this.createRootElement('section', 'cart')//상속 후 코드 :
         cartEl.innerHTML = `
-            <h2>Total : \$${0}</h2>
+            <h2>Total: \$${0}</h2>
             <button>Order Now!</button>
         `;
-        cartEl.className = 'cart';
-        this.totalOutput = cartEl.querySelector('h2');
+        //상속 전 코드 :cartEl.className = 'cart';
+        this.totalOutPut = cartEl.querySelector('h2');
         return cartEl;
     }
 }
-class RenderSingleProd {
+
+class ProductItem {
+    // 단일 상품 rednering 담당 class
     constructor(product) {
-        console.log('this in SingleProd', this);
         this.product = product;
     }
     addToCart() {
-        App.addProductToCart(this.product)
-        console.log('this in add to Cart', this.product);
-        //console.log('adding product to Cart.');
+        App.addProductToCart(this.product);
     }
     render() {
-        const prodEL = document.createElement('li');
-        prodEL.className = 'product-list';
-        prodEL.innerHTML = `
+        const prodEl = document.createElement('li');//상속 구현
+        prodEl.className = 'product-item';
+        prodEl.innerHTML = `
             <div>
-                <img src="${this.product.imageUrl}" alt="${this.product.title}">
-                <div class = "product-item__content">
-                    <h2>${this.product.title}</h2>
-                    <h3>\$${this.product.price}</h3>
-                    <p>${this.product.description}</p>
-                    <button>Add to Cart</button>
+                <img src="${this.product.imageUrl}", alt="${this.product.title}">
+                <div class="product-item__content">
+                <h2>${this.product.title}</h2>
+                <p>${this.product.description}</p>
+                <h3>${this.product.price}</h3>
+                <button>Add to Cart</button>
                 </div>
             </div>
         `;
-        const addCartBtn = prodEL.querySelector('button');
-        console.log('this in render ', this);
-        addCartBtn.addEventListener('click', this.addToCart.bind(this));
-        return prodEL;
+        const addCartButton = prodEl.querySelector('button'); //1. queryselector로 요소 접근
+        addCartButton.addEventListener('click', this.addToCart.bind(this)); //2. 접근하였다면, 클릭 이벤트 등록
+        return prodEl;
     }
 }
 class ProductList {
     products = [
         new Product(
-            'A pillow',
-            'https://www.ikea.com/kr/ko/images/products/dvala-pillowcase-black__0605348_pe681720_s5.jpg?f=s',
-            19.99,
-            'SOFT',
+            'Apple',
+            'https://www.outdoornews.co.kr/news/photo/202009/32077_90504_551.jpg',
+            'envy Apple',
+            80.99,
         ),
         new Product(
-            'A Carpet',
-            'https://thecarpetier.sg/cdn/shop/products/s-4898-scandinavian-carpetcar-cash-4898-120-592627.webp?v=1690186755&width=1946',
-            89.99,
-            'A carpet which you might like - or not',
+            'Mango',
+            'https://i.namu.wiki/i/IQFw-3D_TnH6a1CjO-gOGPkHYBn6YhyazdQkFzUIhJp1yGRoJf-rtpxZL-4O944EZElq5VCFRtGJVH2RS_JPNQ.webp',
+            'envy Mango',
+            90.99,
         ),
     ];
-    constructor() {}
     render() {
-        const productList = document.createElement('ul');
-        productList.className = 'product-list';
-        console.log('1', this);
+        // 모든 상품 rednering 담당 class
+        //const renederHook = document.getElementById('app')
+        const prodList = document.createElement('ul');//상속 구현 
+        prodList.className = 'product-list';
         for (const prod of this.products) {
-            const product = new RenderSingleProd(prod);
-            const prodEL = product.render();
-            productList.append(prodEL);
+            const productItem = new ProductItem(prod);
+            const prodEl = productItem.render();
+            console.log('productList in render', prodEl);
+            prodList.append(prodEl);
         }
-        return productList;
-        //renderHook.append(productList);
+        //renederHook.append(prodList)
+        return prodList;
     }
 }
+
 class Shop {
     render() {
-        console.log("Shop in this", this)
-        const renderHook = document.getElementById('app');
-        this.cart = new ShoppingCart();
-        const cartEl = this.cart.render();
+        const renederHook = document.getElementById('app');
+        //상속 전 코드 : this.cart = new ShoppingCart();
+        this.cart = new ShoppingCart('app');//상속 후 코드 shoppingCart class의 생성자 함수에서 renderHookId를 매개변수로 받기 때문에 전달 
+
+        //상속 전 코드 : const cartEl = this.cart.render();
+        this.cart.render();
+        
         const productList = new ProductList();
-        const productListEl = productList.render();
-        renderHook.append(cartEl);
-        renderHook.append(productListEl);
+        const prodListEl = productList.render();
+
+        //상속 전 코드 : renederHook.append(cartEl);
+        renederHook.append(prodListEl);
     }
 }
-
-
-// const shop = new Shop();
-// shop.render();
 
 class App {
     static cart;
-    
+
     static init() {
         const shop = new Shop();
         shop.render();
-        this.cart=shop.cart
-        console.log("App in this", this)
+        this.cart = shop.cart;
     }
-    static addProductToCart(product) { 
+    static addProductToCart(product) {
         this.cart.addProduct(product);
     }
 }
-App.init()
+//const app = new App()
+// 을 할 필요가 없음-> App class는 정적 클래스이기 때문에 클래스 자체에 엑세스 가능
+App.init();
