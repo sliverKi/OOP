@@ -75,7 +75,10 @@ class ShoppingCart extends Component {
     constructor(renederHookId) {
         super(renederHookId); //자식 클래스에서 생성자를 호출시 먼저 부모클래스의 생성자를 먼저 호출 해야 함
     }
-
+    orderProducts() { 
+        console.log("order");
+        console.log(this.items)
+    }
     render() {
         //:Method-Overriding
         //상속 전 코드 : const cartEl = document.createElement('section');//상속 구현~> extends 키워드 추가
@@ -86,6 +89,8 @@ class ShoppingCart extends Component {
         `;
         //상속 전 코드 :cartEl.className = 'cart';
         this.totalOutPut = cartEl.querySelector('h2');
+        const orderBtn = cartEl.querySelector('button')
+        orderBtn.addEventListener('click', this.orderProducts.bind(this))
         return cartEl;
     }
 }
