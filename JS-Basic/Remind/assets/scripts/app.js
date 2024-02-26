@@ -11,13 +11,20 @@ class Product {
 class ShoppingCart { 
     constructor() { }
     items = []//click되어진 상품을 담을 배열
-    render() { 
+
+    addProduct(product) { 
+        this.items.push(product)
+        this.totalOutput.innerHTML = `<h2>Total: \$${1}</h2>`;
+    }
+
+    render() { //<render cart section>
         const cartEl = document.createElement('section')
         cartEl.className = 'cart'
         cartEl.innerHTML = `
-        <h2>Total: $${0}</h2>
+        <h2>Total: \$${0}</h2>
         <button>Order Now!</button>
         `;
+        this.totalOutput=cartEl.querySelector('h2')
         return cartEl
     }
 }
