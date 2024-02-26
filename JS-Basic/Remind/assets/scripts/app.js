@@ -14,6 +14,11 @@ class ProductItem { //단일 상품에 대한 아웃 소싱
         console.log("h")
         this.product = product
     }
+
+    addToCart() { 
+        console.log("I'm clicked");
+        console.log(this.product)
+    }
     render() { 
         console.log("kk")
         const prodEl = document.createElement('li')
@@ -29,6 +34,8 @@ class ProductItem { //단일 상품에 대한 아웃 소싱
             </div>
         </div>
         `;
+        const addCartBtn = prodEl.querySelector('button')
+        addCartBtn.addEventListener('click', this.addToCart.bind(this))
         return prodEl
     }
 }
