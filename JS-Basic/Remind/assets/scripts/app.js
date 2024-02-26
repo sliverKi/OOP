@@ -12,9 +12,14 @@ class ShoppingCart {
     constructor() { }
     items = []//click되어진 상품을 담을 배열
 
+    get totalAmount() { 
+        const sum = this.items.reduce((prev, cur) => prev + cur.price, 0)
+        return sum 
+    }
+
     addProduct(product) { 
         this.items.push(product)
-        this.totalOutput.innerHTML = `<h2>Total: \$${1}</h2>`;
+        this.totalOutput.innerHTML = `<h2>Total: \$${this.totalAmount}</h2>`;
     }
 
     render() { //<render cart section>
@@ -37,8 +42,10 @@ class ProductItem { //단일 상품에 대한 아웃 소싱
     }
 
     addToCart() { 
-        console.log("I'm clicked");
-        console.log(this.product)
+        // console.log("I'm clicked");
+        // console.log(this.product)
+        App.addProductToCart(this.product)
+        // cart.addProduct()//Error: cart is not defined. ~> cart변수는 외부 클래스 변수에 존재하기 때문에 ProductItem class에서 사용할 수 없음~~>해결방법: 정적 메서드 이용하기 
     }
     render() { 
         console.log("kk")
@@ -93,8 +100,8 @@ class ProductList {
 class Shop { 
     render() { 
         const renderHook = document.getElementById('app')
-        const cart = new ShoppingCart()
-        const cartEl = cart.render()
+        this.cart = new ShoppingCart()
+        const cartEl = this.cart.render()
         const productList = new ProductList()
         const productListEl = productList.render()
 
@@ -103,9 +110,18 @@ class Shop {
 
     }
 }
+class App { 
+    static cart
+    static init() { 
+        const shop = new Shop()
+        shop.render()
+        this.cart = shop.cart
 
-
-const shop = new Shop()
-shop.render()
+    }
+    static addProductToCart(product) { 
+        this.cart.addProduct(product)
+    }
+}
+App.init()
 
 
