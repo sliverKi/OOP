@@ -31,7 +31,7 @@ body {
 }
 
 .prod-item__container{
-    /* border: 2px solid blue; */
+    
     padding: 1rem;
     text-align: center;
 }
@@ -64,4 +64,20 @@ button:hover,
 button:active {
     background: #790fa3;
     border-color: #790fa3;
+}
+
+.cart{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5rem 2rem;
+    padding: 2rem;
+    height: 7rem;
+    border: 2px solid #540075;
+    border-radius: 10px;
+}
+.cart h2{
+    font-size: 1.5rem;
+    color: #540075;
 }
