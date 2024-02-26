@@ -1,21 +1,29 @@
-// 현재 . 이 코드는 상품 수가 만개 오만개가 될때까지 일일이 data를 products 배열에 입력해야 하는 단점이 존재하고
-// 이에따라 css style이 지속적으로 변경해야하는 번거로움이 존재함. 
+class Product { 
+    
+    constructor(title, img, price, desc) { 
+        this.title = title
+        this.imageUrl = img
+        this.price = price
+        this.description = desc
+    }
+}
+
 
 const productList = {
 
     products : [//productList 배열 생성 --> [{객체1}, {객체2}, {개개체3}..{객체4}]
-        {  
-            title: "apple",
-            imageUrl: "https://parade.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTkwNTgxNDY1MzcxMTkxMTY0/different-types-of-apples-jpg.jpg",
-            price: 10000,
-            description: "9 bunch apples",
-        },
-        {
-            title: "green apple",
-            imageUrl: "https://imagecdn.skstoa.com/goods/527/28338527_g.jpg",
-            price: 10000,
-            description: "9 bunch of green apples",
-        }
+        new Product(
+            "apple",
+            "https://parade.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTkwNTgxNDY1MzcxMTkxMTY0/different-types-of-apples-jpg.jpg",
+            10000,
+            "9 bunch apples",
+        ),  
+        new Product(
+            "green apple",
+            "https://imagecdn.skstoa.com/goods/527/28338527_g.jpg",
+            10000,
+            "9 bunch of green apples",
+        )   
     ],
 
     render() { //render method
