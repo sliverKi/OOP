@@ -8,6 +8,20 @@ class Product {
     }
 }
 
+class ShoppingCart { 
+    constructor() { }
+    items = []//click되어진 상품을 담을 배열
+    render() { 
+        const cartEl = document.createElement('section')
+        cartEl.className = 'cart'
+        cartEl.innerHTML = `
+        <h2>Total: $${0}</h2>
+        <button>Order Now!</button>
+        `;
+        return cartEl
+    }
+}
+
 class ProductItem { //단일 상품에 대한 아웃 소싱
 
     constructor(product) { 
@@ -57,7 +71,6 @@ class ProductList {
     ]
 
     render() { //render method
-        const renderHook = document.getElementById('app')
         const prodList = document.createElement("ul")
         prodList.className = 'product-list'
         for (const prod of this.products) { 
@@ -65,11 +78,27 @@ class ProductList {
             const prodEl = prodItem.render()
             prodList.append(prodEl)
         }
-        renderHook.append(prodList)
+        return prodList
+        // renderHook.append(prodList)
     }
 }
 
-const prodList = new ProductList()
-prodList.render()
+class Shop { 
+    render() { 
+        const renderHook = document.getElementById('app')
+        const cart = new ShoppingCart()
+        const cartEl = cart.render()
+        const productList = new ProductList()
+        const productListEl = productList.render()
+
+        renderHook.append(cartEl)
+        renderHook.append(productListEl)
+
+    }
+}
+
+
+const shop = new Shop()
+shop.render()
 
 
